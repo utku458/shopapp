@@ -1,0 +1,51 @@
+@using shopapp.entity
+@model shopapp.webui.Models.ProductDetailModel
+
+@{
+    Layout = "_Layout";
+}
+
+<div class="container my-5">
+    <div class="row">
+        <!-- Ürün Görseli -->
+        <div class="col-md-6 text-center">
+            <img src="~/img/iphone16.jpg" class="img-fluid rounded shadow-sm" alt="@Model.Product.Name" style="max-height: 450px; object-fit: contain;">
+        </div>
+
+        <!-- Ürün Bilgileri -->
+        <div class="col-md-6">
+            <h2 class="mb-3">@Model.Product.Name</h2>
+            <h4 class="text-success">$@Model.Product.Price</h4>
+            <p class="text-muted">@Model.Product.Description</p>
+
+            <hr />
+
+            <!-- Tahmini teslimat -->
+            <div class="mb-3">
+                <strong>Kargo:</strong> Ücretsiz <br />
+                <strong>Tahmini Teslimat:</strong> @DateTime.Now.AddDays(2).ToString("dd MMMM yyyy") - @DateTime.Now.AddDays(4).ToString("dd MMMM yyyy")
+            </div>
+
+            <!-- Stok Bilgisi -->
+            <div class="mb-3">
+                <span class="badge badge-success">Stokta Var</span>
+            </div>
+
+            <!-- Sepete Ekle Formu -->
+            <form asp-controller="Cart" asp-action="AddToCart" class="mt-4">
+                <input type="hidden" name="ProductId" value="@Model.Product.ProductId" />
+
+                <div class="form-group row align-items-center">
+                    <label for="quantity" class="col-sm-2 col-form-label">Adet:</label>
+                    <div class="col-sm-4">
+                        <input type="number" name="quantity" class="form-control" value="1" min="1" step="1" />
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg mt-3">
+                    <i class="fas fa-cart-plus mr-2"></i> Sepete Ekle
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

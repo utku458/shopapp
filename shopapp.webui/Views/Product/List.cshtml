@@ -1,0 +1,39 @@
+@using shopapp.entity;
+
+@model ProductListViewModel
+
+
+@{
+    
+    var products = Model.Products;
+    Layout = "_Layout";
+}
+
+
+
+
+    <div class="row">
+  <div class="col-3 d-flex">
+       @await Component.InvokeAsync("Categories");
+  </div>
+    
+    <div class="col-9 d-flex">
+
+
+        @foreach(var product in Model.Products){
+
+            @await Html.PartialAsync("_products",product);
+
+
+
+
+        }
+    </div>
+    </div>
+     
+
+  
+
+       
+
+

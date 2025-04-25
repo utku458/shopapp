@@ -1,0 +1,83 @@
+@model IEnumerable<User>
+
+@{
+    Layout = "_Layout";
+}
+
+@section Css
+{
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.bootstrap5.css">
+}
+
+@section JS
+{
+    <script src="//cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.bootstrap5.js"></script>
+
+    <script src=" https://code.jquery.com/jquery-3.7.1.js"></script>
+
+   
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            let table = new DataTable('#myTable');
+        });
+    </script>
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h1>User List</h1>
+        <hr>
+        <a class="btn btn-primary btn-sm" href="/admin/user/create">Create User</a>
+        <hr>
+        <table id="myTable" class="table table-bordered">
+            <thead>
+            <tr>
+                <th style="width: 100px">FirstName</th>
+                <th style="width: 150px">LastName</th>
+                <th style="width: 150px">UserName</th>
+                <th style="width: 150px">Email</th>
+                <th style="width: 150px">Email Confirmed</th>
+                <th style="width: 150px">Role Name</th>
+            </tr>
+            </thead>
+            <tbody>
+            @if (Model.Any())
+            {
+                foreach (var item in Model)
+                {
+                    <tr class="@(item.EmailConfirmed ? "" : "bg-warning")">
+                        <td>@item.FirstName</td>
+                        <td>@item.LastName</td>
+                        <td>@item.UserName</td>
+                        <td>@item.Email</td>
+                        <td>@item.EmailConfirmed</td>
+                        <td>
+                            <a class="btn btn-primary btn-sm mr-2" href="/admin/user/@item.Id">Edit</a>
+                            <form style="display: inline" action="/admin/user/delete" method="POST">
+                                <input type="hidden" name="UserId" value="@item.Id">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-danger btn-sm mr-2">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="6">
+                        <div class="alert alert-warning mb-0">
+                            <h3>No Users</h3>
+                        </div>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

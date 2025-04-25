@@ -1,0 +1,185 @@
+@model CartModel
+@{
+
+
+    Layout = "_Layout";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .cart-item {
+            margin-bottom: 20px;
+        }
+        .cart-item img {
+            width: 100px;
+            height: auto;
+        }
+        .total-box {
+            border: 1px solid #dee2e6;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+        }
+        .total-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .text-sm {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+<div class="container my-5">
+    <h1 class="h3 mb-4">Shopping Cart</h1>
+
+    @if (Model.CartItems.Any())
+    {
+        <div class="row">
+            <!-- Left Column: Cart Items -->
+            <div class="col-md-8">
+                <table class="table table-bordered">
+                    <thead class="thead-light">
+                    <tr>
+                        <th>Product</th>
+                        <th style="width: 100px;">Price</th>
+                        <th style="width: 100px;">Quantity</th>
+                        <th style="width: 120px;">Total</th>
+                        <th style="width: 80px;">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var item in Model.CartItems)
+                    {
+                        <tr>
+                            <td class="d-flex align-items-center">
+                                <img src="~/img/@item.ImageUrl" alt="@item.Name" class="mr-2" style="width: 80px; height: 80px; object-fit: cover;">
+                                <span>@item.Name</span>
+                            </td>
+                            <td>@string.Format("{0:C}", item.Price)</td>
+                            <td>
+
+                                <form asp-controller="Cart" asp-action="UpdateQuantity" method="post">
+                                    <input type="hidden" name="productId" value="@item.ProductId" />
+                                    <input type="number" name="quantity" class="form-control" value="@item.Quantity" min="1" onchange="this.form.submit()" />
+                                </form>
+
+
+                            </td>
+                            <td>@string.Format("{0:C}", item.Price * item.Quantity)</td>
+                            <td>
+                                <form asp-action="RemoveFromCart" asp-controller="Cart" method='POST'>
+                                    <input type="hidden" name="productId" value="@item.ProductId">
+                                    <button type="submit" class="btn btn-sm btn-danger"
+                                          >
+                                        <i class="fa fa-times fa-fw"></i>
+                                    </button>
+                                </form>
+                              
+                            </td>
+                        </tr>
+                        
+                    }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Right Column: Order Summary -->
+            <div class="col-md-4">
+                <div class="total-box">
+                    <h5>Order Summary</h5>
+                    <hr />
+                    <p class="d-flex justify-content-between mb-2">
+                        <span>Total Items:</span>
+                        <span>@Model.CartItems.Sum(i => i.Quantity)</span>
+                    </p>
+                    <p class="d-flex justify-content-between mb-2">
+                        <span>Subtotal:</span>
+                        <span>@string.Format("{0:C}", Model.CartItems.Sum(i => i.Price * i.Quantity))</span>
+                    </p>
+                    <p class="d-flex justify-content-between mb-2">
+                        <span>Shipping:</span>
+                        <span>Free</span>
+                    </p>
+                    <p class="d-flex justify-content-between mb-2">
+                        <span>VAT (18%):</span>
+                        <span>
+                            @{
+                                var subtotal = Model.CartItems.Sum(i => i.Price * i.Quantity);
+                                var vat = subtotal * (double)0.18M;
+                                var total = subtotal + vat;
+                            }
+                            @string.Format("{0:C}", vat)
+                        </span>
+                    </p>
+                    <hr />
+                    <p class="d-flex justify-content-between total-price">
+                        <span>Total:</span>
+                        <span>@string.Format("{0:C}", total)</span>
+                    </p>
+
+                    <div class="form-group mt-3">
+                        <label for="coupon">Coupon Code</label>
+                        <input type="text" class="form-control" id="coupon" placeholder="Enter coupon">
+                        <small class="form-text text-muted">If you have a discount code, enter it here.</small>
+                    </div>
+
+                    <p class="text-sm mt-3">Estimated delivery: <strong>@DateTime.Now.AddDays(3).ToString("dddd, dd MMMM")</strong></p>
+                   
+                    <a href="/checkout"  class="btn btn-success btn-block mt-3">Proceed to Checkout</a>
+                   
+                    
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="d-flex flex-column align-items-center justify-content-center text-center my-5 py-5">
+            <img src="https://cdn-icons-png.flaticon.com/512/2038/2038854.png" alt="Empty Cart" style="width: 120px; height: auto; margin-bottom: 20px;" />
+            <h3 class="mb-3">Your cart is currently empty</h3>
+            <p class="text-muted mb-4">Looks like you haven’t added anything to your cart yet.</p>
+            <a href="/" class="btn btn-outline-primary btn-lg">
+                Continue Shopping
+            </a>
+        </div>
+    }
+
+</div>
+
+<script>
+    function updateQuantity(productId, quantity) {
+        fetch(`/Cart/UpdateQuantity?productId=${productId}&quantity=${quantity}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert('Failed to update quantity');
+                }
+            });
+    }
+
+    function removeItem(productId) {
+        fetch(`/Cart/RemoveItem?productId=${productId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert('Failed to remove item');
+                }
+            });
+    }
+</script>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

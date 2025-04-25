@@ -1,0 +1,65 @@
+@{
+    ViewData["Title"] = "Ödeme Hatası";
+    Layout = "_Layout";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-0 shadow-lg rounded-4">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <div class="error-icon mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="#dc3545" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
+                            </svg>
+                        </div>
+                        <h2 class="fw-bold text-danger mb-3">Ödeme İşlemi Başarısız</h2>
+                        <p class="text-muted">@ViewBag.ErrorMessage</p>
+                    </div>
+
+                    <div class="error-details bg-light p-4 rounded-3 mb-4">
+                        <h5 class="fw-bold mb-3">Hata Detayları</h5>
+                        <p class="mb-0">Lütfen ödeme bilgilerinizi kontrol edip tekrar deneyiniz.</p>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <div class="d-grid gap-3 d-md-flex justify-content-md-center">
+                            <a href="/Cart/Checkout" class="btn btn-danger btn-lg px-4 me-md-2">
+                                <i class="bi bi-arrow-clockwise me-2"></i>Tekrar Dene
+                            </a>
+                            <a href="/" class="btn btn-outline-secondary btn-lg px-4">
+                                <i class="bi bi-house-door me-2"></i>Ana Sayfaya Dön
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .error-icon {
+        animation: scaleIn 0.5s ease-out;
+    }
+
+    @@keyframes scaleIn {
+        0% {
+            transform: scale(0);
+            opacity: 0;
+        }
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    .card {
+        transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+</style>

@@ -1,0 +1,43 @@
+@using shopapp.entity;
+
+@model ProductListViewModel
+
+@{
+    var products = Model.Products;
+    Layout = "_Layout";
+}
+
+<style>
+    .category-list {
+        margin: 0;
+        padding: 0;
+    }
+</style>
+
+<div class="container-fluid p-0">
+    <div class="row g-0">
+        <!-- Sol Tarafa Sabitlenmiş Kategoriler -->
+        <div class="col-md-2 d-flex flex-column vh-100 border-end p-3">
+            <div class="category-list">
+                @await Component.InvokeAsync("Categories")
+            </div>
+        </div>
+
+        <!-- Ürün Listesi -->
+        <div class="col-md-10">
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                @foreach (var product in products)
+                {
+                    <div class="col d-flex">
+                        <div class="card flex-fill">
+                            @await Html.PartialAsync("_products", product)
+                        </div>
+                    </div>
+                }
+            </div>
+
+          
+          
+        </div>
+    </div>
+</div>

@@ -1,0 +1,132 @@
+@model shopapp.webui.Models.OrderModel
+
+@{
+    Layout = "_Layout";
+}
+
+<h1 class="my-4">Checkout</h1>
+
+<div class="row">
+    <!-- Checkout Form -->
+    <div class="col-md-8">
+        <form asp-action="Checkout" asp-controller="Cart" method="post">
+            <div class="card p-4 shadow-sm">
+                <h4 class="mb-4">Billing Details</h4>
+
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="mb-3">
+                    <label asp-for="FirstName" class="form-label"></label>
+                    <input asp-for="FirstName" class="form-control" />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="LastName" class="form-label"></label>
+                    <input asp-for="LastName" class="form-control" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Phone" class="form-label"></label>
+                    <input asp-for="Phone" class="form-control" />
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Address" class="form-label"></label>
+                    <input asp-for="Address" class="form-control" />
+                    <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="City" class="form-label"></label>
+                    <input asp-for="City" class="form-control" />
+                    <span asp-validation-for="City" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Note" class="form-label">Not (Opsiyonel)</label>
+                    <input asp-for="Note" class="form-control" />
+                    <span asp-validation-for="Note" class="text-danger"></span>
+                </div>
+
+                <h4 class="mt-5 mb-4">Payment Details</h4>
+
+                <div class="mb-3">
+                    <label asp-for="CardName" class="form-label">Cardholder Name</label>
+                    <input asp-for="CardName" class="form-control" />
+                    <span asp-validation-for="CardName" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="CardNumber" class="form-label">Card Number</label>
+                    <input asp-for="CardNumber" class="form-control" />
+                    <span asp-validation-for="CardNumber" class="text-danger"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="ExpirationMonth" class="form-label">Exp. Month</label>
+                        <input asp-for="ExpirationMonth" class="form-control" placeholder="MM" />
+                        <span asp-validation-for="ExpirationMonth" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="ExpirationYear" class="form-label">Exp. Year</label>
+                        <input asp-for="ExpirationYear" class="form-control" placeholder="YYYY" />
+                        <span asp-validation-for="ExpirationYear" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="Cvc" class="form-label">CVC</label>
+                        <input asp-for="Cvc" class="form-control" />
+                        <span asp-validation-for="Cvc" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 mt-3">Place Order</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Order Summary -->
+    <div class="col-md-4">
+        <div class="card p-4 shadow-sm">
+            <h4 class="mb-4">Order Summary</h4>
+
+            @if (Model.CartModel != null && Model.CartModel.CartItems != null && Model.CartModel.CartItems.Any())
+            {
+                <ul class="list-group mb-3">
+                    @foreach (var item in Model.CartModel.CartItems)
+                    {
+                        <li class="list-group-item d-flex justify-content-between lh-sm">
+                            <div>
+                                <h6 class="my-0">@item.Name</h6>
+                                <small class="text-muted">@item.Quantity x @item.Price.ToString("C2")</small>
+                            </div>
+                            <span class="text-muted">@((item.Quantity * item.Price).ToString("C2"))</span>
+                        </li>
+                    }
+                    <li class="list-group-item d-flex justify-content-between">
+                        <strong>Total</strong>
+                        <strong>@Model.CartModel.TotalPrice().ToString("C2")</strong>
+                    </li>
+                </ul>
+            }
+            else
+            {
+                <div class="alert alert-info">Your cart is empty.</div>
+            }
+        </div>
+    </div>
+</div>
+
+@section JS {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js"></script>
+}

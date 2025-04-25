@@ -1,0 +1,16 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using shopapp.data.Concrete.EfCore;
+using shopapp.entity;
+
+namespace shopapp.data.Abstract
+{
+    public interface IOrderRepository: IRepository<Order>
+    { 
+        List<Order> GetOrders(string userId);
+
+    }
+}
