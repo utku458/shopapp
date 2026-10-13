@@ -175,3 +175,10 @@ yarn-error.log
 .vscode/
 *.swp
 *.swo 
+*.iml
+xcuserdata/
+local.properties
+google-services.json
+GoogleService-Info.plist
+.env.*
+build/
